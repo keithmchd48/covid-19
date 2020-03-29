@@ -3,23 +3,14 @@
     <div class="w-2/3 mt-5">
       <div class="flex justify-between">
         <div class="flex items-center">
-          <label for="sort" class="font-semibold">Sort By:</label>
+          <label for="search" class="font-semibold">Search Country:</label>
           <div class="p-2 w-56">
-            <select id="sort" v-model="sortby" class="sort-select">
-              <option value="1">Country</option>
-              <option value="2">Total Cases</option>
-              <option value="3">New Cases</option>
-              <option value="4">Total Deaths</option>
-              <option value="5">New Deaths</option>
-              <option value="6">Total Recovered</option>
-              <option value="7">Active Cases</option>
-              <option value="8">Critical</option>
-            </select>
+            <input id="search" type="text" class="border-gray-500" />
           </div>
         </div>
       </div>
       <!--TABLE TITLES-->
-      <div class="border border-gray-500 grid grid-cols-8">
+      <div class="border border-gray-500 grid grid-cols-8 cursor-pointer">
         <!--TITLE COUNTRY-->
         <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
           Country
@@ -203,26 +194,5 @@
 <style scoped>
   .table-height {
     height: 500px;
-  }
-  .sort-select {
-    display: block;
-    width: 100%;
-    height: calc(1.5em + .75rem + 2px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  }
-  .sort-select:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
   }
 </style>
