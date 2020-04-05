@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <div class="w-2/3 mt-5">
+    <div class="lg:w-2/3 md:w-full mt-5">
       <div class="flex justify-between">
         <div class="flex items-center">
           <label for="search" class="font-semibold">Search Country:</label>
@@ -10,9 +10,9 @@
         </div>
       </div>
       <!--TABLE TITLES-->
-      <div class="border border-gray-500 grid grid-cols-8 cursor-pointer">
+      <div class="border border-gray-500 grid grid-cols-8 cursor-pointer text-xs sm:text-sm md:text-base">
         <!--TITLE COUNTRY-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('country')"
         >
           Country
@@ -20,49 +20,49 @@
           <i v-if="iconUpDown('country') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('cases')">
           Total Cases
           <i v-if="iconUpDown('cases') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('cases') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE NEW CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('todayCases')">
           New Cases
           <i v-if="iconUpDown('todayCases') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('todayCases') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL DEATHS-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('deaths')">
           Total Deaths
           <i v-if="iconUpDown('deaths') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('deaths') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE NEW DEATHS-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('todayDeaths')">
           New Deaths
           <i v-if="iconUpDown('todayDeaths') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('todayDeaths') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL RECOVERED-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1 text-center"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1 text-center"
              @click="sortMe('recovered')">
           Total Recovered
           <i v-if="iconUpDown('recovered') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('recovered') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE ACTIVE CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('active')">
           Active Cases
           <i v-if="iconUpDown('active') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
           <i v-if="iconUpDown('active') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE CRITICAL-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+        <div class="border-r border-gray-500 font-bold flex justify-center items-center p-1"
              @click="sortMe('critical')">
           Critical
           <i v-if="iconUpDown('critical') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
@@ -70,7 +70,7 @@
         </div>
       </div>
       <!--WORLD-->
-      <div class="border border-gray-500 grid grid-cols-8">
+      <div class="border border-gray-500 grid grid-cols-8 text-xs sm:text-sm">
         <div class="bg-gray-300 border-r border-gray-500 flex items-center p-1">World</div>
         <div class="bg-gray-300 border-r border-gray-500 flex justify-center items-center">
           {{numberWithCommas(worldTotalCases)}}
@@ -95,15 +95,18 @@
         </div>
       </div>
       <!--COUNTRIES-->
-      <div class="overflow-y-scroll table-height border-b">
+      <div class="overflow-y-scroll table-height border-b text-xs sm:text-sm">
         <div class="border border-gray-500 grid grid-cols-8 hover:bg-gray-200"
              v-for="(country, index) in sortedAndSearchedData" :key="index"
         >
           <!--COUNTRY-->
-          <div class="border-r border-gray-500 flex justify-between items-center cursor-pointer p-1">
-            <div>{{country.country}}</div>
+          <div class="border-r border-gray-500 flex justify-between items-center cursor-pointer p-1 tooltip">
+            <div>{{country.country | shortCountryName}}</div>
+            <i class="tooltiptext">
+              {{country.country}}
+            </i>
             <div>
-              <img :src="country.countryInfo.flag" class="object-scale-down h-5"/>
+              <img :src="country.countryInfo.flag" class="object-scale-down h-5 border border-blue-500"/>
             </div>
           </div>
           <!--TOTAL CASES-->
@@ -152,6 +155,14 @@
 
   export default {
     name: 'Home',
+    filters: {
+      shortCountryName (value) {
+        if (value.length > 10) {
+          return `${value.slice(0, 8)}...`
+        }
+        return value
+      }
+    },
     data () {
       return {
         countries: [],
