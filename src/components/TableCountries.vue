@@ -1,12 +1,13 @@
 <template>
   <div class="flex justify-center">
     <div class="lg:w-2/3 md:w-full mt-5">
-      <div class="flex justify-between">
-        <div class="flex items-center">
-          <label for="search" class="font-semibold">Search Country:</label>
-          <div class="p-2 w-56">
-            <input id="search" type="text" class="border-gray-500" />
-          </div>
+      <div class="flex items-center pb-2">
+        <div class="w-full">
+          <input id="search" type="text"
+                 class="border w-full border-blue-300 rounded p-2 outline-none focus:shadow-outline focus:bg-gray-100"
+                 placeholder="Search country"
+                 v-model="countryName"
+          />
         </div>
       </div>
       <!--TABLE TITLES-->
@@ -165,6 +166,7 @@
     },
     data () {
       return {
+        countryName: '',
         countries: [],
         sortedAndSearchedData: [],
         sortby: [
@@ -209,6 +211,15 @@
             asc: true
           },
         ]
+      }
+    },
+    watch: {
+      countryName: {
+        handler() {
+          this.sortedAndSearchedData = this.countries.filter((d) => {
+            return d.country.toLowerCase().includes(this.countryName.toLowerCase())
+          })
+        }
       }
     },
     computed: {
