@@ -5,8 +5,8 @@ export const handleResponse = {
 async function getFinalResponse (url, requestOptions) {
   return await fetch(url, requestOptions)
     .then(APIresponse)
-    .catch(error => {
-      console.log(error)
+    .catch(() => {
+      // console.log(error)
     })
 }
 

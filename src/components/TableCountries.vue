@@ -12,36 +12,61 @@
       <!--TABLE TITLES-->
       <div class="border border-gray-500 grid grid-cols-8 cursor-pointer">
         <!--TITLE COUNTRY-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('country')"
+        >
           Country
+          <i v-if="iconUpDown('country') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('country') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('cases')">
           Total Cases
+          <i v-if="iconUpDown('cases') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('cases') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE NEW CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('todayCases')">
           New Cases
+          <i v-if="iconUpDown('todayCases') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('todayCases') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL DEATHS-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('deaths')">
           Total Deaths
+          <i v-if="iconUpDown('deaths') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('deaths') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE NEW DEATHS-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('todayDeaths')">
           New Deaths
+          <i v-if="iconUpDown('todayDeaths') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('todayDeaths') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE TOTAL RECOVERED-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1 text-center">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1 text-center"
+             @click="sortMe('recovered')">
           Total Recovered
+          <i v-if="iconUpDown('recovered') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('recovered') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE ACTIVE CASES-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('active')">
           Active Cases
+          <i v-if="iconUpDown('active') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('active') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
         <!--TITLE CRITICAL-->
-        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1">
+        <div class="border-r border-gray-500 font-bold text-base flex justify-center items-center p-1"
+             @click="sortMe('critical')">
           Critical
+          <i v-if="iconUpDown('critical') === 'asc'" class="fas fa-sort-amount-down-alt text-gray-600 pl-1"/>
+          <i v-if="iconUpDown('critical') === 'dsc'" class="fas fa-sort-amount-up-alt text-gray-600 pl-1"/>
         </div>
       </div>
       <!--WORLD-->
@@ -72,13 +97,13 @@
       <!--COUNTRIES-->
       <div class="overflow-y-scroll table-height border-b">
         <div class="border border-gray-500 grid grid-cols-8 hover:bg-gray-200"
-             v-for="(country, index) in countries" :key="index"
+             v-for="(country, index) in sortedAndSearchedData" :key="index"
         >
           <!--COUNTRY-->
           <div class="border-r border-gray-500 flex justify-between items-center cursor-pointer p-1">
             <div>{{country.country}}</div>
             <div>
-              <img :src="country.countryInfo.flag" class="object-scale-down h-5">
+              <img :src="country.countryInfo.flag" class="object-scale-down h-5"/>
             </div>
           </div>
           <!--TOTAL CASES-->
@@ -130,7 +155,49 @@
     data () {
       return {
         countries: [],
-        sortby: '2'
+        sortedAndSearchedData: [],
+        sortby: [
+          {
+            column: 'country',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'cases',
+            active: true,
+            asc: true
+          },
+          {
+            column: 'todayCases',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'deaths',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'todayDeaths',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'recovered',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'active',
+            active: false,
+            asc: true
+          },
+          {
+            column: 'critical',
+            active: false,
+            asc: true
+          },
+        ]
       }
     },
     computed: {
@@ -177,6 +244,40 @@
       async getCountriesData () {
         const response = await apiService.countriesData()
         this.countries = response
+        // filter out the "World" Data
+        this.countries = this.sortedAndSearchedData = response.filter(data => {
+          return data.country.toLowerCase() !== 'world'
+        })
+      },
+      sortMe (column) {
+        const findColumn = this.sortby.find(ele => {
+          return ele.column === column
+        })
+        this.sortby = this.sortby.map(s => {
+          if (s.column === column) {
+            return {
+              ...s,
+              active: true,
+              asc: !s.asc
+            }
+          } else {
+            return {
+              ...s,
+              active: false
+            }
+          }
+        });
+        function compare(a, b) {
+          if (findColumn.asc) {
+            if (a[findColumn.column] > b[findColumn.column]) return 1;
+            if (b[findColumn.column] > a[findColumn.column]) return -1;
+          } else {
+            if (a[findColumn.column] > b[findColumn.column]) return -1;
+            if (b[findColumn.column] > a[findColumn.column]) return 1;
+          }
+          return 0;
+        }
+        this.sortedAndSearchedData.sort(compare)
       },
       numberWithCommas (num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -186,6 +287,18 @@
           return `+${this.numberWithCommas(num)}`
         } else {
           return this.numberWithCommas(num)
+        }
+      },
+      iconUpDown (column) {
+        const findColumn = this.sortby.find(ele => {
+          return ele.column === column
+        });
+        if (findColumn.active && findColumn.asc) {
+          return 'asc'
+        } else if (findColumn.active && !findColumn.asc) {
+          return 'dsc'
+        } else {
+          return false
         }
       }
     }
