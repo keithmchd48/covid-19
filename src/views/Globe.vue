@@ -15,25 +15,34 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   export default {
     name: 'Globe',
     data () {
       return {
-        years: ['1990','1995','2000'],
+        years: ['1990'],
         globeData: [["USA",[38, -97, 1, 20, 77, 0.25]]]
       }
     },
+    computed: {
+      ...mapState(['TC'])
+    },
     mounted () {
+      this.globeData = [["USA",this.TC]]
       this.renderGlobe()
     },
     methods: {
       renderGlobe () {
+        // eslint-disable-next-line no-undef
         if(!Detector.webgl){
+          // eslint-disable-next-line no-undef
           Detector.addGetWebGLMessage();
         } else {
           // const years = ['1990','1995','2000'];
           const container = document.getElementById('globe-container');
+          // eslint-disable-next-line no-undef
           let globe = new DAT.Globe(container);
+          // eslint-disable-next-line no-undef
           TWEEN.start();
 
           const data = this.globeData
@@ -47,11 +56,12 @@
       },
       settime (globe, t) {
         return () => {
+          // eslint-disable-next-line no-undef
           new TWEEN.Tween(globe).to({time: t/this.years.length},500).easing(TWEEN.Easing.Cubic.EaseOut).start();
         }
       },
       handleClick () {
-        this.globeData = [["USA",[42.8333, 12.8333, 1, 20, 77, 0.25]]]
+        this.globeData = [["USA",[42.8333, 12.8333, 1, 20, 77, 0.95]]]
         this.renderGlobe()
       }
     }

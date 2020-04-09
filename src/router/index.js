@@ -11,10 +11,17 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  // apple-touch-icon-152x152
   {
-    path: '/:country',
+    path: '/globe',
     name: 'Globe',
-    component: Globe
+    component: Globe,
+    beforeEnter: (to, from, next) => {
+      if (from.name !== 'Home') {
+        return next({name: 'Home'})
+      }
+      return next()
+    }
   }
 ]
 

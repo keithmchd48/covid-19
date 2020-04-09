@@ -72,7 +72,10 @@
       </div>
       <!--WORLD-->
       <div class="border border-gray-500 grid grid-cols-8 text-xs sm:text-sm">
-        <div class="bg-gray-300 border-r border-gray-500 flex items-center p-1">World</div>
+        <div class="bg-gray-300 border-r border-gray-500 flex items-center p-1 cursor-pointer"
+             @click="showGlobe">
+          World
+        </div>
         <div class="bg-gray-300 border-r border-gray-500 flex justify-center items-center">
           {{numberWithCommas(worldTotalCases)}}
         </div>
@@ -153,7 +156,7 @@
 
 <script>
   import {apiService} from "@/services/api.service";
-
+  import {mapActions} from 'vuex'
   export default {
     name: 'Home',
     filters: {
@@ -263,6 +266,7 @@
       this.getCountriesData()
     },
     methods: {
+      ...mapActions(['SET_TC_ACTION']),
       async getCountriesData () {
         const response = await apiService.countriesData()
         this.countries = response
@@ -322,6 +326,16 @@
         } else {
           return false
         }
+      },
+      showGlobe () {
+        let arr = []
+        const len = this.countries.length
+        for (let i = 0; i < len; i++) {
+          const fraction = (this.countries[i].cases/this.worldTotalCases).toFixed(2)
+          arr = [...arr, ...[this.countries[i].countryInfo.lat, this.countries[i].countryInfo.long, Number(fraction)*10]]
+        }
+        this.SET_TC_ACTION(arr);
+        this.$router.push({name: 'Globe'})
       }
     }
   }
