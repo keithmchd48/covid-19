@@ -1,15 +1,23 @@
 <template>
   <div class="body h-screen">
     <div id="globe-container"></div>
-
-    <div id="currentInfo">
-      <span id="year1990" @click="handleClick" class="year">1990</span>
-      <span id="year1995" class="year">1995</span>
-      <span id="year2000" class="year">2000</span>
+    <div id="currentInfo" class="flex flex-col">
+      <span @click="handleClick(0)" class="year">Total Cases</span>
+      <span @click="handleClick(1)" class="year">New Cases</span>
+      <span @click="handleClick(2)" class="year">Total Deaths</span>
+      <span @click="handleClick(3)" class="year">New Death</span>
+      <span @click="handleClick(4)" class="year">Total Recovered</span>
+      <span @click="handleClick(5)" class="year">Active Cases</span>
+      <span @click="handleClick(6)" class="year">Critical</span>
     </div>
 
     <div id="title">
-      World Population
+      World COVID-19 data
+    </div>
+    <div class="text-white text-xl hover:bg-white hover:text-black back border border-white rounded cursor-pointer p-3"
+         @click="$router.push({name: 'Home'})"
+    >
+      Back
     </div>
   </div>
 </template>
@@ -20,19 +28,19 @@
     name: 'Globe',
     data () {
       return {
-        years: ['1990'],
+        years: ['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'],
         globeData: [["USA",[38, -97, 1, 20, 77, 0.25]]]
       }
     },
     computed: {
-      ...mapState(['TC'])
+      ...mapState(['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'])
     },
     mounted () {
-      this.globeData = [["USA",this.TC]]
-      this.renderGlobe()
+      this.globeData = [["TC",this.TC],["NC",this.NC], ["TD",this.TD], ["ND",this.ND], ["TR",this.TR], ["AC",this.AC], ["CR",this.CR]]
+      this.renderGlobe(0)
     },
     methods: {
-      renderGlobe () {
+      renderGlobe (c) {
         // eslint-disable-next-line no-undef
         if(!Detector.webgl){
           // eslint-disable-next-line no-undef
@@ -50,7 +58,7 @@
             globe.addData(data[i][1], {format: 'magnitude', name: data[i][0], animated: true});
           }
           globe.createPoints();
-          this.settime(globe,0)();
+          this.settime(globe,c)();
           globe.animate();
         }
       },
@@ -60,9 +68,8 @@
           new TWEEN.Tween(globe).to({time: t/this.years.length},500).easing(TWEEN.Easing.Cubic.EaseOut).start();
         }
       },
-      handleClick () {
-        this.globeData = [["USA",[42.8333, 12.8333, 1, 20, 77, 0.95]]]
-        this.renderGlobe()
+      handleClick (c) {
+        this.renderGlobe(c)
       }
     }
   }
@@ -119,10 +126,16 @@
     padding: 10px;
   }
 
+  .back {
+    position: absolute;
+    font-family: Georgia,serif;
+    right: 20px;
+    top: 20px;
+  }
   .year {
     font: 16px Georgia;
     line-height: 26px;
-    height: 30px;
+    /*height: 30px;*/
     text-align: center;
     float: left;
     width: 90px;

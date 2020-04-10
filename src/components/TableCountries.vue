@@ -99,7 +99,10 @@
         </div>
       </div>
       <!--COUNTRIES-->
-      <div class="overflow-y-scroll table-height border-b text-xs sm:text-sm">
+      <div v-if="loading" class="border border-gray-500 table-height items-center text-xl flex justify-center">
+        Loading...
+      </div>
+      <div v-else class="overflow-y-scroll table-height border-b text-xs sm:text-sm">
         <div class="border border-gray-500 grid grid-cols-8 hover:bg-gray-200"
              v-for="(country, index) in sortedAndSearchedData" :key="index"
         >
@@ -169,6 +172,7 @@
     },
     data () {
       return {
+        loading: false,
         countryName: '',
         countries: [],
         sortedAndSearchedData: [],
@@ -266,9 +270,11 @@
       this.getCountriesData()
     },
     methods: {
-      ...mapActions(['SET_TC_ACTION']),
+      ...mapActions(['SET_TC_ACTION', 'SET_NC_ACTION', 'SET_TD_ACTION', 'SET_ND_ACTION', 'SET_TR_ACTION', 'SET_AC_ACTION', 'SET_CR_ACTION']),
       async getCountriesData () {
+        this.loading = true
         const response = await apiService.countriesData()
+        this.loading = false
         this.countries = response
         // filter out the "World" Data
         this.countries = this.sortedAndSearchedData = response.filter(data => {
@@ -327,14 +333,23 @@
           return false
         }
       },
-      showGlobe () {
+      populateArray (column, total) {
         let arr = []
         const len = this.countries.length
         for (let i = 0; i < len; i++) {
-          const fraction = (this.countries[i].cases/this.worldTotalCases).toFixed(2)
+          const fraction = (this.countries[i][column]/total).toFixed(2)
           arr = [...arr, ...[this.countries[i].countryInfo.lat, this.countries[i].countryInfo.long, Number(fraction)*10]]
         }
-        this.SET_TC_ACTION(arr);
+        return arr
+      },
+      showGlobe () {
+        this.SET_TC_ACTION(this.populateArray('cases', this.worldTotalCases));
+        this.SET_NC_ACTION(this.populateArray('todayCases', this.worldNewCases));
+        this.SET_TD_ACTION(this.populateArray('deaths', this.worldTotalDeaths));
+        this.SET_ND_ACTION(this.populateArray('todayDeaths', this.worldNewDeaths));
+        this.SET_TR_ACTION(this.populateArray('recovered', this.worldTotalRecovered));
+        this.SET_AC_ACTION(this.populateArray('active', this.worldActiveCases));
+        this.SET_CR_ACTION(this.populateArray('critical', this.worldCritical));
         this.$router.push({name: 'Globe'})
       }
     }
