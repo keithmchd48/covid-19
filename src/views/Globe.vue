@@ -2,13 +2,13 @@
   <div class="body h-screen">
     <div id="globe-container"></div>
     <div id="currentInfo" class="flex flex-col">
-      <span @click="handleClick(0)" class="year">Total Cases</span>
-      <span @click="handleClick(1)" class="year">New Cases</span>
-      <span @click="handleClick(2)" class="year">Total Deaths</span>
-      <span @click="handleClick(3)" class="year">New Death</span>
-      <span @click="handleClick(4)" class="year">Total Recovered</span>
-      <span @click="handleClick(5)" class="year">Active Cases</span>
-      <span @click="handleClick(6)" class="year">Critical</span>
+      <span id="TC" class="year">Total Cases</span>
+      <span id="NC" class="year">New Cases</span>
+      <span id="TD" class="year">Total Deaths</span>
+      <span id="ND" class="year">New Death</span>
+      <span id="TR" class="year">Total Recovered</span>
+      <span id="AC" class="year">Active Cases</span>
+      <span id="CR" class="year">Critical</span>
     </div>
 
     <div id="title">
@@ -28,7 +28,7 @@
     name: 'Globe',
     data () {
       return {
-        years: ['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'],
+        cols: ['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'],
         globeData: [["USA",[38, -97, 1, 20, 77, 0.25]]]
       }
     },
@@ -60,16 +60,27 @@
           globe.createPoints();
           this.settime(globe,c)();
           globe.animate();
+
+          for(var i = 0; i<this.cols.length; i++) {
+            var y = document.getElementById(this.cols[i]);
+            y.addEventListener('mouseover', this.settime(globe,i), false);
+          }
         }
       },
       settime (globe, t) {
         return () => {
           // eslint-disable-next-line no-undef
-          new TWEEN.Tween(globe).to({time: t/this.years.length},500).easing(TWEEN.Easing.Cubic.EaseOut).start();
+          new TWEEN.Tween(globe).to({time: t/this.cols.length},500).easing(TWEEN.Easing.Cubic.EaseOut).start();
+          var y = document.getElementById(this.cols[t]);
+          if (y.getAttribute('class') === 'year active') {
+            return;
+          }
+          var yy = document.getElementsByClassName('year');
+          for(let i = 0; i < yy.length; i++) {
+            yy[i].setAttribute('class','year');
+          }
+          y.setAttribute('class', 'year active');
         }
-      },
-      handleClick (c) {
-        this.renderGlobe(c)
       }
     }
   }
@@ -91,13 +102,11 @@
   }
 
   #currentInfo {
-    width: 270px;
+    width: 210px;
     position: absolute;
     left: 20px;
     top: 63px;
-
     background-color: rgba(0,0,0,0.2);
-
     border-top: 1px solid rgba(255,255,255,0.4);
     padding: 10px;
   }
@@ -134,19 +143,18 @@
   }
   .year {
     font: 16px Georgia;
-    line-height: 26px;
+    line-height: 50px;
     /*height: 30px;*/
-    text-align: center;
+    /*text-align: center;*/
     float: left;
-    width: 90px;
+    /*width: 90px;*/
     color: rgba(255, 255, 255, 0.4);
 
     cursor: pointer;
     -webkit-transition: all 0.1s ease-out;
   }
-
-  /*.year:hover, .year.active {*/
-  /*  font-size: 23px;*/
-  /*  color: #fff;*/
-  /*}*/
+  .year:hover, .year.active {
+    font-size: 23px;
+    color: #fff;
+  }
 </style>

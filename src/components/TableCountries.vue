@@ -1,13 +1,16 @@
 <template>
   <div class="flex justify-center">
     <div class="lg:w-2/3 md:w-full mt-5">
-      <div class="flex items-center pb-2">
+      <div class="flex flex-col">
         <div class="w-full">
           <input id="search" type="text"
                  class="border w-full border-blue-300 rounded p-2 outline-none focus:shadow-outline focus:bg-gray-100"
                  placeholder="Search country"
                  v-model="countryName"
           />
+        </div>
+        <div class="text-sm">
+          *Click on "World" to view a global overview of the pandemic
         </div>
       </div>
       <!--TABLE TITLES-->
@@ -72,7 +75,7 @@
       </div>
       <!--WORLD-->
       <div class="border border-gray-500 grid grid-cols-8 text-xs sm:text-sm">
-        <div class="bg-gray-300 border-r border-gray-500 flex items-center p-1 cursor-pointer"
+        <div class="bg-gray-300 border-r border-gray-500 flex justify-center items-center p-1 cursor-pointer hover:text-blue-700 hover:underline"
              @click="showGlobe">
           World
         </div>
@@ -338,7 +341,7 @@
         const len = this.countries.length
         for (let i = 0; i < len; i++) {
           const fraction = (this.countries[i][column]/total).toFixed(2)
-          arr = [...arr, ...[this.countries[i].countryInfo.lat, this.countries[i].countryInfo.long, Number(fraction)*10]]
+          arr = [...arr, ...[this.countries[i].countryInfo.lat, this.countries[i].countryInfo.long, Number(fraction)*5]]
         }
         return arr
       },

@@ -9,7 +9,7 @@
     <!--FOOTER-->
     <div class="border-t border-black bg-black py-3 px-12 flex justify-end">
       <div class="text-white">
-        Created by Keith
+        @Sculpted by Keith
       </div>
     </div>
   </div>
