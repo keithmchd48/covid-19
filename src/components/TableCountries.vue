@@ -273,7 +273,7 @@
       this.getCountriesData()
     },
     methods: {
-      ...mapActions(['SET_TC_ACTION', 'SET_NC_ACTION', 'SET_TD_ACTION', 'SET_ND_ACTION', 'SET_TR_ACTION', 'SET_AC_ACTION', 'SET_CR_ACTION']),
+      ...mapActions(['SET_TC_ACTION', 'SET_TD_ACTION', 'SET_TR_ACTION']),
       async getCountriesData () {
         this.loading = true
         const response = await apiService.countriesData()
@@ -336,23 +336,42 @@
           return false
         }
       },
-      populateArray (column, total) {
-        let arr = []
-        const len = this.countries.length
-        for (let i = 0; i < len; i++) {
-          const fraction = (this.countries[i][column]/total).toFixed(2)
-          arr = [...arr, ...[this.countries[i].countryInfo.lat, this.countries[i].countryInfo.long, Number(fraction)*5]]
+      async showGlobe () {
+        const response = await apiService.bingData();
+        let TC = [];
+        let TD = [];
+        let TR = [];
+        const countries = response.areas;
+        for (let i = 0; i < countries.length; i++) {
+          const countryTotalConfirmed = countries[i].totalConfirmed;
+          const countryTotalDeaths = countries[i].totalDeaths;
+          const countryTotalRecovered = countries[i].totalRecovered;
+          const states = countries[i].areas;
+          for (let j = 0; j < states.length; j++) {
+            const fractionTC = (states[j].totalConfirmed/countryTotalConfirmed);
+            const fractionTD = (states[j].totalDeaths/countryTotalDeaths);
+            const fractionTR = (states[j].totalRecovered/countryTotalRecovered);
+            TC = [...TC, ...[states[j].lat, states[j].long, Number(fractionTC)*5]];
+            TD = [...TD, ...[states[j].lat, states[j].long, Number(fractionTD)*5]];
+            TR = [...TR, ...[states[j].lat, states[j].long, Number(fractionTR)*5]];
+
+            const stateTotalConfirmed = states[j].totalConfirmed;
+            const stateTotalDeaths = states[j].totalDeaths;
+            const stateTotalRecovered = states[j].totalRecovered;
+            const cities = states[j].areas;
+            for (let k = 0; k < cities.length; k++) {
+              const cityFractionTC = (cities[k].totalConfirmed/stateTotalConfirmed);
+              const cityFractionTD = (cities[k].totalDeaths/stateTotalDeaths);
+              const cityFractionTR = (cities[k].totalRecovered/stateTotalRecovered);
+              TC = [...TC, ...[cities[k].lat, cities[k].long, Number(cityFractionTC)*5]];
+              TD = [...TD, ...[cities[k].lat, cities[k].long, Number(cityFractionTD)*5]];
+              TR = [...TR, ...[cities[k].lat, cities[k].long, Number(cityFractionTR)*5]];
+            }
+          }
         }
-        return arr
-      },
-      showGlobe () {
-        this.SET_TC_ACTION(this.populateArray('cases', this.worldTotalCases));
-        this.SET_NC_ACTION(this.populateArray('todayCases', this.worldNewCases));
-        this.SET_TD_ACTION(this.populateArray('deaths', this.worldTotalDeaths));
-        this.SET_ND_ACTION(this.populateArray('todayDeaths', this.worldNewDeaths));
-        this.SET_TR_ACTION(this.populateArray('recovered', this.worldTotalRecovered));
-        this.SET_AC_ACTION(this.populateArray('active', this.worldActiveCases));
-        this.SET_CR_ACTION(this.populateArray('critical', this.worldCritical));
+        this.SET_TC_ACTION(TC);
+        this.SET_TD_ACTION(TD);
+        this.SET_TR_ACTION(TR);
         this.$router.push({name: 'Globe'})
       }
     }

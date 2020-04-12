@@ -3,12 +3,8 @@
     <div id="globe-container"></div>
     <div id="currentInfo" class="flex flex-col">
       <span id="TC" class="year">Total Cases</span>
-      <span id="NC" class="year">New Cases</span>
       <span id="TD" class="year">Total Deaths</span>
-      <span id="ND" class="year">New Death</span>
       <span id="TR" class="year">Total Recovered</span>
-      <span id="AC" class="year">Active Cases</span>
-      <span id="CR" class="year">Critical</span>
     </div>
 
     <div id="title">
@@ -28,15 +24,15 @@
     name: 'Globe',
     data () {
       return {
-        cols: ['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'],
+        cols: ['TC', 'TD', 'TR'],
         globeData: [["USA",[38, -97, 1, 20, 77, 0.25]]]
       }
     },
     computed: {
-      ...mapState(['TC', 'NC', 'TD', 'ND', 'TR', 'AC', 'CR'])
+      ...mapState(['TC', 'TD', 'TR'])
     },
     mounted () {
-      this.globeData = [["TC",this.TC],["NC",this.NC], ["TD",this.TD], ["ND",this.ND], ["TR",this.TR], ["AC",this.AC], ["CR",this.CR]]
+      this.globeData = [["TC",this.TC], ["TD",this.TD], ["TR",this.TR]]
       this.renderGlobe(0)
     },
     methods: {
@@ -53,7 +49,7 @@
           // eslint-disable-next-line no-undef
           TWEEN.start();
 
-          const data = this.globeData
+          const data = this.globeData;
           for (let i=0;i<data.length;i++) {
             globe.addData(data[i][1], {format: 'magnitude', name: data[i][0], animated: true});
           }
